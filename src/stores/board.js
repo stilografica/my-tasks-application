@@ -25,7 +25,6 @@ export const useBoardStore = defineStore('board', {
   actions: {
     createNewTask(task, column) {
       const index = this.board.columns.findIndex(col => col.name === column)
-      console.log(this.board.columns[index])
       this.board.columns[index].tasks.push(
         {
           name: task,
@@ -34,6 +33,27 @@ export const useBoardStore = defineStore('board', {
           id: uuid(),
         }
       )
+      localStorage.setItem(
+        'board',
+        JSON.stringify(this.board)
+      )
+    },
+    editTask(id, event) {
+      const columnIndex = this.board.columns.findIndex((item) => {
+        if (item.tasks.filter(task =>  task.id === id).length > 0 ) {
+          return item
+        }
+        
+      })
+      
+      const taskIndex = this.board.columns[columnIndex].tasks.findIndex(task => task.id === id)
+      this.board.columns[columnIndex].tasks[taskIndex].name = event
+      localStorage.setItem(
+        'board',
+        JSON.stringify(this.board)
+      )
+    },
+    sortTaks() {
       localStorage.setItem(
         'board',
         JSON.stringify(this.board)
