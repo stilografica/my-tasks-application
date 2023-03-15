@@ -20,6 +20,7 @@ const emit = defineEmits(['openModal'])
 
 const router = useRouter();
 const drag = ref(false);
+const dialog = ref('');
 
 const taskLocation = (id, columnName) => {
   emit('openModal', columnName)
@@ -52,7 +53,7 @@ const draggableEnd = ($columnIndex) => {
       >
       <div class="d-flex justify-space-between mt-2">
       <h4 class="font-weight-thin">{{ task.name }}</h4>
-      <v-icon icon="mdi-delete-outline" color="grey" size="small" class="icon"/>
+      <v-icon icon="mdi-delete-outline" color="grey" size="small" class="icon" @click="dialog = true"/>
     </div>
       </li>
     </template>
