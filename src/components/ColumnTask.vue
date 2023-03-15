@@ -45,24 +45,29 @@ const draggableEnd = ($columnIndex) => {
     >
     <template #item="{ element: task }">
       <li
-        class="task my-4 mx-5 list-group-item pt-2 pl-2"
+        class="task my-4 mx-10 list-group-item pt-4 px-5"
         :key="task.id"
         :subtitle="task.description"
         @click="taskLocation(task.id, column.name)"
       >
-      <h4>{{ task.name }}</h4>
+      <div class="d-flex justify-space-between mt-2">
+      <h4 class="font-weight-thin">{{ task.name }}</h4>
+      <v-icon icon="mdi-delete-outline" color="grey" size="small" class="icon"/>
+    </div>
       </li>
     </template>
   </draggable>
 </template>
 <style scoped>
 .task {
-  height: 40px;
-  border-radius: .2rem;
+  height: 80px;
+  border-radius: 1.2rem;
   background-color: #fff;
   color: #000;
   display: block;
-}
+  border: 1px solid rgba(34,41,47,.125);
+  -webkit-filter: drop-shadow(0 5px 10px rgba(0,0,0,.1));
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,.1));}
 .task-title::first-letter {
   text-transform: capitalize;
 }
@@ -74,5 +79,7 @@ const draggableEnd = ($columnIndex) => {
 .list-group-item {
   cursor: move;
 }
-
+.icon {
+  opacity: .4
+}
 </style>

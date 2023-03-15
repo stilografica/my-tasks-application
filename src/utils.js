@@ -12,3 +12,22 @@ export function uuid () {
       }
     )
   }
+
+  export function boardVariant (variant) {
+    const variantsColors = {
+      "To do": "secondary",
+      "In progress": "warning",
+      Completed: "success",
+    };
+    return variantsColors[variant];
+  };
+
+   export function boardIcon (variant) {
+    const variantIcon = {
+      "To do": "mdi-folder",
+      "In progress": "mdi-format-paint",
+      Completed: "mdi-check-circle-outline",
+    };
+  
+    return variantIcon[variant];
+  };

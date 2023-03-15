@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "material-design-icons-iconfont": "^6.7.0",
     "pinia": "^2.0.32",
     "vue": "^3.2.26",
     "vue-router": "^4.1.6",
@@ -15,6 +16,8 @@
     "vuetify": "^3.1.8"
   },
   "devDependencies": {
+    "@mdi/font": "^7.1.96",
+    "@mdi/js": "^7.1.96",
     "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^9.8.8",
     "postcss": "^7.0.39",
