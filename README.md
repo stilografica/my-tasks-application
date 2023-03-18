@@ -1,6 +1,6 @@
-# app-latest
+# My tasks application
 
-This template should help get you started developing with Vue 3 in Vite.
+<b>My tasks</b> is the visual tool that empowers your team to manage any type of task.
 
 ## Recommended IDE Setup
 
