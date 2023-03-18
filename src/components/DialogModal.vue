@@ -1,43 +1,36 @@
 <script setup>
-import { useBoardStore } from "../stores/board";
-import { storeToRefs } from 'pinia'
 import { ref, defineProps, toRefs, defineEmits } from "vue";
-import { RouterView } from "vue-router";
-import { boardVariant, boardIcon } from '@/utils';
-
-const boardStore = useBoardStore();
-
-const { board } = storeToRefs(boardStore);
+import { boardVariant } from '@/utils';
 
 const props = defineProps({
   modalTitle: String,
 });
 
-const emit = defineEmits(['handleClose'])
-
 const { modalTitle } = toRefs(props);
+
+const emit = defineEmits(['handleClose']);
 
 const dialog = ref(false);
 
 const handleCloseModal = () => {
-  emit('handleClose')
+  emit('handleClose');
 };
-
 </script>
 <template>
   <v-dialog v-model="dialog" class="modal">
     <v-card>
       <v-card-title :class="`bg-${boardVariant(modalTitle)}`">
-        <v-icon :icon="boardIcon(modalTitle)"  size="small" class="icon mr-1"/>
-        {{ modalTitle }}
+        <slot name="header" />
       </v-card-title>
       <v-card-text>
-        <RouterView class="my-5" />
+        <slot name="view" />
       </v-card-text>
       <v-card-actions class="d-flex justify-end">
-        <v-btn  class="bg-blue-grey-lighten-5" @click="handleCloseModal">
-          Close
-        </v-btn>
+        <slot name="footer">
+          <v-btn  class="bg-blue-grey-lighten-5 mb-4 mr-3" @click="handleCloseModal">
+            Close
+          </v-btn>
+        </slot>
       </v-card-actions>
     </v-card>
   </v-dialog>

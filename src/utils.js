@@ -19,10 +19,10 @@ export function uuid () {
       "In progress": "warning",
       Completed: "success",
     };
-    return variantsColors[variant];
+    return variantsColors[variant] || 'red';
   };
 
-   export function boardIcon (variant) {
+  export function boardIcon (variant) {
     const variantIcon = {
       "To do": "mdi-folder",
       "In progress": "mdi-format-paint",

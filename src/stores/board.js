@@ -7,7 +7,8 @@ const board = JSON.parse(localStorage.getItem('board')) || defaultBoard
 export const useBoardStore = defineStore('board', {
   plugins: [saveStatePlugin],
   state: () => ({
-    board
+    board,
+    alert: {},
   }),
   getters: {
     getTask(state) {
@@ -45,9 +46,23 @@ export const useBoardStore = defineStore('board', {
         }
         
       })
-      
       const taskIndex = this.board.columns[columnIndex].tasks.findIndex(task => task.id === id)
-      this.board.columns[columnIndex].tasks[taskIndex].name = event
+      this.board.columns[columnIndex].tasks[taskIndex].name = event || 'No title'
+      localStorage.setItem(
+        'board',
+        JSON.stringify(this.board)
+      )
+    },
+    deleteTask(id) {
+      const columnIndex = this.board.columns.findIndex((item) => {
+        if (item.tasks.filter(task =>  task?.id === id).length > 0 ) {
+          return item
+        }
+        
+      })
+      const columnTasks = this.board.columns[columnIndex].tasks.filter(task => task.id !== id)
+      console.log(this.board)
+      this.board.columns[columnIndex].tasks = columnTasks;
       localStorage.setItem(
         'board',
         JSON.stringify(this.board)
@@ -58,6 +73,9 @@ export const useBoardStore = defineStore('board', {
         'board',
         JSON.stringify(this.board)
       )
+    },
+    showMessage(message) {
+      this.alert = message;
     }
   },
 })

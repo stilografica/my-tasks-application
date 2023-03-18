@@ -2,13 +2,14 @@
 import { useBoardStore } from "../stores/board";
 import { storeToRefs } from 'pinia'
 import { useRouter } from "vue-router";
-import { ref, defineProps,toRefs } from "vue";
+import { ref, defineProps,toRefs, computed } from "vue";
 import draggable from 'vuedraggable';
 import { uuid } from '@/utils';
+import DialogModal from '@/components/DialogModal.vue';
 
 const props = defineProps({
   column: Object
-})
+});
 
 const { column } = toRefs(props);
 
@@ -16,23 +17,44 @@ const boardStore = useBoardStore();
 
 const { board } = storeToRefs(boardStore);
 
-const emit = defineEmits(['openModal'])
+const emit = defineEmits(['openModal']);
 
 const router = useRouter();
-const drag = ref(false);
-const dialog = ref('');
 
+const drag = ref(false);
+
+const dialog = ref(false);
+
+const taskId = ref('');
+
+const modalTitle = computed(() => {
+  return 'Are you sure you want to delete this task?'
+});
 const taskLocation = (id, columnName) => {
-  emit('openModal', columnName)
+  emit('openModal', columnName);
   return router.push({ name: "task", params: { id: id } });
 };
 
 const draggableEnd = ($columnIndex) => {
   const tasks = board.value.columns[$columnIndex];
-  boardStore.sortTaks($columnIndex, tasks)
-  drag.value = false
+  boardStore.sortTaks($columnIndex, tasks);
+  drag.value = false;
 }
 
+const handleDeleteTask = (id) => {
+  taskId.value = id;
+  dialog.value = true;
+}
+
+const deleteThisTask = () => {
+  dialog.value = false;
+  boardStore.deleteTask(taskId.value);
+  boardStore.showMessage({ show: true, text: 'Task removed successfully' });
+  setTimeout(() => {
+    boardStore.showMessage({ show: false, text: '' });
+
+  }, 2000);
+}
 </script>
 <template>      
   <!-- Tasks -->
@@ -41,6 +63,7 @@ const draggableEnd = ($columnIndex) => {
     :item-key="uuid()"
     group="columns"
     class="list-group"
+    :class="!column.tasks || column.tasks.length === 0 ? 'list-group--empty' : ''"
     @start="drag=true"
     @end="draggableEnd($columnIndex)"
     >
@@ -51,13 +74,29 @@ const draggableEnd = ($columnIndex) => {
         :subtitle="task.description"
         @click="taskLocation(task.id, column.name)"
       >
-      <div class="d-flex justify-space-between mt-2">
-      <h4 class="font-weight-thin">{{ task.name }}</h4>
-      <v-icon icon="mdi-delete-outline" color="grey" size="small" class="icon" @click="dialog = true"/>
-    </div>
+        <div class="d-flex justify-space-between mt-2">
+          <h4 class="font-weight-thin">{{ task.name }}</h4>
+          <v-icon icon="mdi-delete-outline" color="grey" size="small" class="icon" @click.stop="handleDeleteTask(task.id)"/>
+        </div>
       </li>
     </template>
   </draggable>
+  <dialog-modal
+    v-model="dialog"
+    :modal-title="modalTitle"
+  >
+    <template #header>
+      <h5 class="ml-5">{{ modalTitle }}</h5>
+    </template>
+    <template #footer>
+      <v-btn  class="bg-deep-orange-darken-1 d-block mx-auto mb-4 " @click="deleteThisTask">
+        Delete
+      </v-btn>
+      <v-btn  class="bg-blue-grey-lighten-5 d-block mx-auto mb-4 " @click="dialog = false">
+        Cancel
+      </v-btn>
+    </template>
+  </dialog-modal>
 </template>
 <style scoped>
 .task {
@@ -82,5 +121,8 @@ const draggableEnd = ($columnIndex) => {
 }
 .icon {
   opacity: .4
+}
+.list-group--empty {
+  min-height: 100px;
 }
 </style>
